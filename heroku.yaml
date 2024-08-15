@@ -1,0 +1,25 @@
+setup:
+  addons:
+  - plan: heroku-postgresql
+    as: DATABASE
+  - plan: heroku-redis
+    as: REDIS
+  config:
+    REDIS_TLS_URL:
+    REDIS_URL: 
+    SECRET_KEY_BASE:
+build:
+  docker:
+    web: Dockerfile
+  config:
+    RAILS_ENV: production
+run:
+  web: bundle exec puma -C config/puma.rb
+  js: 
+    command:
+      - yarn build --watch
+    image: web
+  css: 
+    command:
+      - yarn build:css --watch
+    image: web
